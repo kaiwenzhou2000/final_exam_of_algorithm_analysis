@@ -35,6 +35,7 @@ def play_chess(size, chess_board_x, chess_board_y, missing_x, missing_y):
     if size == 1:
         return
     # 追踪的记号
+    # trace_step 每次都会为三个位置上的元素填充
     trace_step = step
     step += 1
     size = int(size/2)
