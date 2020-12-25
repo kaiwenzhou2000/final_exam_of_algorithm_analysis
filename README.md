@@ -142,3 +142,7 @@ value\_table[i-1][j] \\
 value[i] + value\_table[i-1][j-weight[i]]
 \end{cases}
 $$
+建立表格之后，找到最大的就行了
+
+## 第四题
+
