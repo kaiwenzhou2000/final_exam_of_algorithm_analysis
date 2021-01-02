@@ -4,10 +4,11 @@
 # 分析是否有一种着色法使G中每条边的两个顶点着不同颜色？
 # 使用回溯法分析本问题，并画出在此框架下的解空间树（并添加适当注释）。
 
-color_num = 3   # 颜色的数目
-node_num: int = 3   # 节点的数目
+color_num = 3  # 颜色的数目
+node_num: int = 3  # 节点的数目
 G_map = [[1 for i in range(node_num)] for j in range(node_num)]  # 1表示是连通的
-color_arr = [-1 for k in range(node_num)]   # 颜色数组
+color_arr = [-1 for k in range(node_num)]  # 颜色数组
+
 
 # G_map无向图的初始化
 def G_map_ini():
