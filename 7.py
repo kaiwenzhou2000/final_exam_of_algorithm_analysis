@@ -12,7 +12,8 @@
 # 表示第一艘船的最大负载重量
 bestw: int = 50
 # 表示物品的重量, 为了层数相互对应，在0索引的位置设置了一个哨兵节点
-w = [-1, 10, 40, 40]
+# w = [-1, 10, 40, 40]
+w = [-1, 10, 30, 50]
 # w = [-1, 20, 40, 40]
 # 表示现在所在的层数
 level = 0
@@ -78,6 +79,115 @@ def FIFO_with_cut():
         del queen[0]
 
 
-FIFO_with_cut()
+class node:
 
-print(current_max)
+    def __init__(self, max, current_w, level):
+        self.max = max          # 下面要是全部拿到的话一共有多少
+        self.current_w = current_w      # 现在的重量
+        self.level = level
+
+
+# 大顶堆
+class MaxHeap:
+    def __init__(self):
+        self.data = [node(-1, -1, -1)]
+        self.size = 0
+
+    def add(self, item):
+        self.size += 1
+        self.data.append(item)
+        i = self.size
+        while i != 1:
+            j = int(i / 2)  # 父节点编号
+            if self.data[j].max < self.data[i].max:
+                # 交换父子节点
+                temp = self.data[j]
+                self.data[j] = self.data[i]
+                self.data[i] = temp
+                i = j
+            else:
+                break
+
+    def pop(self):
+        if self.size == 0:
+            print('len = 0, can\'t pop')
+            return
+        self.data[1] = self.data[self.size]
+        del self.data[self.size]
+        self.size -= 1
+        i = 1
+        while i < self.size:
+            # 找出左右的最大节点max_node
+            left = i * 2  # 左节点下标
+            right = i * 2 + 1  # 右节点下标
+            # 左边越界
+            if left > self.size:
+                break
+            # 右边越界
+            if right > self.size:
+                # 最大值是左边
+                temp = self.data[i]
+                self.data[i] = self.data[left]
+                self.data[left] = temp
+                i = left
+                continue
+
+            # 左右都没有越界
+            if self.data[right].max > self.data[left].max:
+                temp = self.data[i]
+                self.data[i] = self.data[right]
+                self.data[right] = temp
+                i = right
+            else:
+                temp = self.data[i]
+                self.data[i] = self.data[left]
+                self.data[left] = temp
+                i = left
+
+    def show_queen(self):
+        for i in self.data[1: self.size + 1]:
+            print(str(i.max) + ' ', end='')
+
+
+# LC-搜索
+def LC_search():
+    global level,current_max
+    # 建立大根堆
+    mh = MaxHeap()
+    # 初始化树，建立根节点
+    mh.add(node(0, 0, 0))
+    head_level = 0
+    level = head_level + 1
+    while level != len(w) and mh.size != 0:
+        print(head_level)
+        temp = 0
+        for i in w[level:]:
+            temp += i
+        # 找到E-节点
+        head_current_w = mh.data[1].current_w
+        mh.pop()
+        # 左子节点
+        if head_current_w + w[level] < bestw:
+            # 更新current_max
+            if current_max < head_current_w + w[level]:
+                current_max = head_current_w + w[level]
+            mh.add(node(temp, head_current_w + w[level], level))
+        # 右子节点
+        if current_max + temp-w[level] > bestw:
+            mh.add(node(temp-w[level], head_current_w, level))
+
+        # 更新下一个头的节点
+        head_level = mh.data[1].level
+        level = head_level + 1      # 叶子节点的层数
+    print(current_max)
+
+# FIFO_with_cut()
+#
+# print(current_max)
+
+LC_search()
+
+# mh = MaxHeap()
+# mh.add(node(0, 0, 0))
+# mh.pop()
+
